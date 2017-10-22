@@ -1,0 +1,794 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="https://krausefx.github.io/krausefx.com//feed.xml" rel="self" type="application/atom+xml" /><link href="https://krausefx.github.io/krausefx.com//" rel="alternate" type="text/html" /><updated>2017-10-22T22:54:10+00:00</updated><id>https://krausefx.github.io/krausefx.com//</id><title type="html">Felix Krause</title><subtitle>Personal website and blog of Felix Krause</subtitle><entry><title type="html">iOS Privacy: steal.password - Easily get the user’s Apple ID password, just by asking</title><link href="https://krausefx.github.io/krausefx.com//blog/ios-privacy-stealpassword-easily-get-the-users-apple-id-password-just-by-asking" rel="alternate" type="text/html" title="iOS Privacy: steal.password - Easily get the user's Apple ID password, just by asking" /><published>2017-10-10T00:00:00+00:00</published><updated>2017-10-10T00:00:00+00:00</updated><id>https://krausefx.github.io/krausefx.com//blog/ios-privacy-stealpassword-easily-get-the-users-apple-id-password-just-by-asking</id><content type="html" xml:base="https://krausefx.github.io/krausefx.com//blog/ios-privacy-stealpassword-easily-get-the-users-apple-id-password-just-by-asking">&lt;p&gt;Do you want the user’s Apple ID password, to get access to their Apple account, or to try the same email/password combination on different web services? Just ask your users politely, they’ll probably just hand over their credentials, as they’re trained to do so 👌&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_59dc97a83e00bed1b42c0096_1507631710330__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_59dca223197aeaa9a5932f2e_1507631701259__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;disclaimer&quot;&gt;Disclaimer&lt;/h2&gt;
+
+&lt;p&gt;This is just a proof of concept, phishing attacks are illegal! Don’t use this in any of your apps. The goal of this blog post is to close the loophole that has been there for many years, and hasn’t been addressed yet. For moral reasons, I decided not to include the actual source code of the popup, however it was shockingly easy to replicate the system dialog.&lt;/p&gt;
+
+&lt;h2 id=&quot;why-does-this-work&quot;&gt;Why does this work?&lt;/h2&gt;
+
+&lt;p&gt;iOS asks the user for their iTunes password for many reasons, the most common ones are recently installed iOS operating system updates, or iOS apps that are stuck during installation.&lt;/p&gt;
+
+&lt;p&gt;As a result, users are trained to just enter their Apple ID password whenever iOS prompts you to do so. However, those popups are not only shown on the lock screen, and the home screen, but also inside random apps, e.g. when they want to access iCloud, GameCenter or In-App-Purchases.&lt;/p&gt;
+
+&lt;p&gt;This could easily be abused by any app, just by showing an UIAlertController, that looks exactly like the system dialog.&lt;/p&gt;
+
+&lt;p&gt;Even users who know a lot about technology have a hard time detecting that those alerts are phishing attacks.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-can-you-protect-yourself&quot;&gt;How can you protect yourself&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Hit the home button, and see if the app quits:
+    &lt;ul&gt;
+      &lt;li&gt;If it closes the app, and with it the dialog, then this was a phishing attack&lt;/li&gt;
+      &lt;li&gt;If the dialog and the app are still visible, then it’s a system dialog. The reason for that is that the system dialogs run on a different process, and not as part of any iOS app.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Don’t enter your credentials into a popup, instead, dismiss it, and open the Settings app manually. This is the same concept, like you should never click on links on emails, but instead open the website manually&lt;/li&gt;
+  &lt;li&gt;If you hit the Cancel button on a dialog, the app still gets access to the content of the password field. Even after entering the first characters, the app probably already has your password.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Initially I thought, faking those alerts requires the app developer to know your email. Turns out, some of those auth popups don’t include the email address, making it even easier for phishing apps to ask for the password.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_59dca2accf81e0c47e1e7144_1507631811313__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;proposal&quot;&gt;Proposal&lt;/h2&gt;
+
+&lt;p&gt;Modern web browsers already do an excellent job protecting users from phishing attacks. Phishing within mobile apps is a rather new concept, and therefore still pretty unexplored.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;When asking for the Apple ID from the user, instead of asking for the password directly, ask them to open the settings app&lt;/li&gt;
+  &lt;li&gt;Fix the root of the problem, users shouldn’t constantly be asked for their credentials. It doesn’t affect all users, but I myself had this issue for many months, until it randomly disappeared.&lt;/li&gt;
+  &lt;li&gt;Dialogs from apps could contain the app icon on the top right of the dialog, to indicate an app is asking you, and not the system. This approach is used by push notifications also, this way, an app can’t just send push notifications as the iTunes app.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_59dca405c534a5f23644c180_1507632212491__img.jpg_&quot; align=&quot;right&quot; width=&quot;250&quot; class=&quot;inline-img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I’ve reported this as a radar, which you can dupe: &lt;a href=&quot;https://openradar.appspot.com/radar?id=4952345645416448&quot;&gt;rdar://34885659&lt;/a&gt; 👍&lt;/p&gt;
+
+&lt;p&gt;Sometimes iOS shows the following notification on the lock screen, which opens up the iCloud Settings screen, this is a much better approach than to ask for the password directly: &lt;/p&gt;
+
+&lt;h2 id=&quot;complexity&quot;&gt;Complexity&lt;/h2&gt;
+
+&lt;p&gt;Showing a dialog that looks just like a system popup is super easy, there is no magic or secret code involved, it’s literally the examples provided in the Apple docs, with a custom text.&lt;/p&gt;
+
+&lt;p&gt;I decided not to open source the actual popup code, however, note that it’s less than 30 lines of code and every iOS engineer will be able to quickly build their own phishing code.&lt;/p&gt;
+
+&lt;h2 id=&quot;qa&quot;&gt;Q&amp;amp;A&lt;/h2&gt;
+
+&lt;p&gt;Imagine if everybody read this before posting a comment on HackerNews/Reddit #oneCanDream :)&lt;/p&gt;
+
+&lt;h3 id=&quot;but-i-have-2-factor-enabled-im-safe-right&quot;&gt;But, I have 2-factor enabled, I’m safe, right?&lt;/h3&gt;
+
+&lt;p&gt;Good for you, everybody should use 2-step verification obviously, however many people don’t. At the same time, even if your Apple account is 2FA protected, many users still use the same username/password combination on most web services, meaning if hackers know your Apple ID password, chances are high, they’re gonna try the same combination on other common services.&lt;/p&gt;
+
+&lt;p&gt;Also, even with 2FA enabled accounts, what if the app asked you for your 2 step code? Most users would gladly request a 2FA-token and ask for it, and directly pipe it over to a remote server.&lt;/p&gt;
+
+&lt;h3 id=&quot;apple-would-never-accept-such-an-app-right&quot;&gt;Apple would never accept such an app, right?&lt;/h3&gt;
+
+&lt;p&gt;Apple is doing a great job protecting users from dangerous third party apps, that’s why the App Store is built and provided like it is, that’s why we code sign our application (
+&lt;a href=&quot;https://krausefx.com/blog/the-developer-part-of-ios-code-signing-doesnt-add-any-security-to-anything&quot;&gt;not really, but kind of&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;However, it’s rather easy to run certain code only after the app is approved, those are not new ideas, but just to give you some ideas:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Use remote code (which is not allowed by itself, except for JavaScript), React Native or a custom JS bridge is your friend&lt;/li&gt;
+  &lt;li&gt;Use the iTunes search API to compare the current version number with the App Store version number (&lt;a href=&quot;https://itunes.apple.com/lookup?bundleId=com.Facebook.Facebook&quot;&gt;example request&lt;/a&gt;), this way the app can automatically enable malicious code after it got approved.&lt;/li&gt;
+  &lt;li&gt;Use a remote configuration tool to enable a feature only after an app is approved by Apple&lt;/li&gt;
+  &lt;li&gt;Use a time-based trigger: just skip running certain code for the first week after submitting the binary, meaning the code will only run once the app is either approved or rejected.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.theverge.com/2017/4/23/15399438/apple-uber-app-store-fingerprint-program-tim-cook-travis-kalanick&quot;&gt;Pull an Uber and don’t run certain code when the location is near Cupertino&lt;/a&gt; (it’s probably fixed by Apple by now)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The things above is public knowledge, most iOS developers are aware, and I strongly advise against using any of this, Apple will eventually catch you and block your account.&lt;/p&gt;
+
+&lt;p&gt;The point of this list is: While the review process provides a basic safety filter, organisations with bad intent will always find a way to somehow work around the limitations of a platform.&lt;/p&gt;
+
+&lt;h3 id=&quot;phishing-on-mobile-is-that-a-thing-now&quot;&gt;Phishing on mobile? Is that a thing now?&lt;/h3&gt;
+
+&lt;p&gt;This area will become more and more relevant, with users being uninformed, and the mobile operating systems not yet clearly separating system UI and app UI. This is kind of related to 
+&lt;a href=&quot;https://github.com/KrauseFx/detect.location&quot;&gt;detect.location&lt;/a&gt;, where apps would write their own, custom image picker to provide a better “experience”, but in reality, with that, they also get full access to your image library, and optionally also your camera (related to 
+&lt;a href=&quot;https://github.com/KrauseFx/watch.user&quot;&gt;watch.user&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;iOS should very clearly distinguish between system UI and app UI elements, so that ideally it’s even obvious for the average smartphone user that something seems off. This is a tricky problem to solve, and web browser are still tackling it, you still have websites that make popups look like macOS / iOS popups, so that many users think it’s a system message.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_59dca2ebf14aa1f26de959f6_1507631870942__img.jpg_&quot; align=&quot;right&quot; width=&quot;250&quot; class=&quot;inline-img&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;but-but-but-why-is-the-symbol-within-the--is-this-all-fake&quot;&gt;But, but, but, why is the . symbol within the “, is this all fake?&lt;/h3&gt;
+
+&lt;p&gt;Nope, actually, that’s how the system dialog looks like, the . is within the “string notation, so I designed the phishing dialog to also include the same style.&lt;/p&gt;
+
+&lt;h2 id=&quot;similar-projects-i-worked-on&quot;&gt;Similar projects I worked on &lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/KrauseFx/whats-the-user-doing&quot;&gt;what’s the user doing&lt;/a&gt;: Raising awareness of what you can do with a smartphones gyro sensors in web browsers&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/krausefx/detect.location&quot;&gt;detect.location&lt;/a&gt;: An easy way to access the user’s iOS location data without actually having access&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 style=&quot;text-align: center; font-size: 40px;&quot;&gt;
+  &lt;a href=&quot;https://github.com/KrauseFx/steal.password&quot; target=&quot;_blank&quot; style=&quot;text-decoration: underline;&quot;&gt;
+    Open on GitHub
+  &lt;/a&gt;
+&lt;/h3&gt;
+
+&lt;p style=&quot;margin-top: 30px&quot;&gt;&lt;small&gt;This project is in no way affiliated with my work and employer, it's a hobby of mine I work on during weekends&lt;/small&gt;&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="privacy" /><category term="phishing" /><category term="login" /><category term="credentials" /><summary type="html">Do you want the user’s Apple ID password, to get access to their Apple account, or to try the same email/password combination on different web services? Just ask your users politely, they’ll probably just hand over their credentials, as they’re trained to do so 👌</summary></entry><entry><title type="html">Crypto-Summaries: An API to get short summaries of key features of crypto currencies</title><link href="https://krausefx.github.io/krausefx.com//blog/crypto-summaries-an-api-to-get-short-summaries-of-key-features-of-crypto-currencies" rel="alternate" type="text/html" title="Crypto-Summaries: An API to get short summaries of key features of crypto currencies" /><published>2017-09-26T00:00:00+00:00</published><updated>2017-09-26T00:00:00+00:00</updated><id>https://krausefx.github.io/krausefx.com//blog/crypto-summaries-an-api-to-get-short-summaries-of-key-features-of-crypto-currencies</id><content type="html" xml:base="https://krausefx.github.io/krausefx.com//blog/crypto-summaries-an-api-to-get-short-summaries-of-key-features-of-crypto-currencies">&lt;p&gt;While working on crypto currency automation over the last weeks, I noticed that one of the best known websites 
+&lt;a href=&quot;https://coinmarketcap.com/&quot;&gt;coinmarketcap.com&lt;/a&gt; lists all the coins and some basic information, but not a description or tags of what each coin does.&lt;/p&gt;
+
+&lt;p&gt;One of my cryptocurrency bots will send me summaries of its trading activities every day, with a list of coins and the amounts invested, however I usually was interested what those coins do, and why they exist.&lt;/p&gt;
+
+&lt;p&gt;I’m not sure how many developers face this issue, but I decided to build and publish a side project of my side project, it’s called Crypto-Summaries and it’s available on 
+&lt;a href=&quot;https://github.com/KrauseFx/crypto-summaries&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here are some examples of how to use the API (for the most up to date docs, please 
+&lt;a href=&quot;https://github.com/KrauseFx/crypto-summaries&quot;&gt;open the GitHub repo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;access-the-summary-of-bitcoin&quot;&gt;Access the summary of Bitcoin:&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;1 line summary&lt;/strong&gt;: &lt;a href=&quot;https://krausefx.github.io/crypto-summaries/coins/btc-1.txt&quot;&gt;https://krausefx.github.io/crypto-summaries/coins/btc-1.txt&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;3 lines summary&lt;/strong&gt;: &lt;a href=&quot;https://krausefx.github.io/crypto-summaries/coins/btc-3.txt&quot;&gt;https://krausefx.github.io/crypto-summaries/coins/btc-3.txt&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;5 lines summary&lt;/strong&gt;: &lt;a href=&quot;https://krausefx.github.io/crypto-summaries/coins/btc-5.txt&quot;&gt;https://krausefx.github.io/crypto-summaries/coins/btc-5.txt&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Alternatively you can also use the name of the coin instead of symbol&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;3 lines summary&lt;/strong&gt;: &lt;a href=&quot;https://krausefx.github.io/crypto-summaries/coins/bitcoin-3.txt&quot;&gt;https://krausefx.github.io/crypto-summaries/coins/bitcoin-3.txt&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The goal is to have a community maintained description of crypto currencies, maybe one day even support for tags, so you could filter for e.g. gaming coins. &lt;/p&gt;</content><author><name></name></author><summary type="html">While working on crypto currency automation over the last weeks, I noticed that one of the best known websites coinmarketcap.com lists all the coins and some basic information, but not a description or tags of what each coin does.</summary></entry><entry><title type="html">iOS Privacy: What’s the user doing?</title><link href="https://krausefx.github.io/krausefx.com//blog/ios-privacy-whats-the-user-doing" rel="alternate" type="text/html" title="iOS Privacy: What's the user doing?" /><published>2017-09-05T00:00:00+00:00</published><updated>2017-09-05T00:00:00+00:00</updated><id>https://krausefx.github.io/krausefx.com//blog/ios-privacy-whats-the-user-doing</id><content type="html" xml:base="https://krausefx.github.io/krausefx.com//blog/ios-privacy-whats-the-user-doing">&lt;p&gt;Modern web browsers give the user more control over what data they’re sharing with websites, for example location services and access to the camera.&lt;/p&gt;
+
+&lt;p&gt;However I recently noticed a gap of how websites can determine the activity of the user based on the acceleration and gyro sensor built into modern smartphones, including the iPhone and Android phones.&lt;/p&gt;
+
+&lt;p&gt;Using that data, any website can determine if the user is using their phone while&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_59db442dcf81e005db7a1f0b_1507542072340_photo.jpg_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;sitting&lt;/li&gt;
+  &lt;li&gt;standing&lt;/li&gt;
+  &lt;li&gt;walking&lt;/li&gt;
+  &lt;li&gt;running&lt;/li&gt;
+  &lt;li&gt;driving&lt;/li&gt;
+  &lt;li&gt;taking a picture&lt;/li&gt;
+  &lt;li&gt;lying in bed&lt;/li&gt;
+  &lt;li&gt;laying the phone on a table&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;and probably more, including guesses if the user is actively using their phone at this moment, or even if they’re impaired by alcohol.&lt;/p&gt;
+
+&lt;h3 style=&quot;text-align: center; font-size: 40px;&quot;&gt;
+  &lt;a href=&quot;https://github.com/KrauseFx/whats-the-user-doing&quot; target=&quot;_blank&quot; style=&quot;text-decoration: underline;&quot;&gt;
+    Open on GitHub
+  &lt;/a&gt;
+&lt;/h3&gt;
+
+&lt;h3 style=&quot;text-align: center; font-size: 40px;&quot;&gt;
+  &lt;a href=&quot;https://krausefx.github.io/whats-the-user-doing&quot; target=&quot;_blank&quot; style=&quot;color: #60A74E !important; text-decoration: underline;&quot;&gt;
+    Live demo
+  &lt;/a&gt;
+&lt;/h3&gt;
+
+&lt;p style=&quot;margin-top: 30px&quot;&gt;&lt;small&gt;This project is in no way affiliated with my work and employer, it's a hobby of mine I work on during weekends&lt;/small&gt;&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="privacy" /><category term="web" /><summary type="html">Modern web browsers give the user more control over what data they’re sharing with websites, for example location services and access to the camera.</summary></entry><entry><title type="html">How to get started contributing to open source projects</title><link href="https://krausefx.github.io/krausefx.com//blog/how-to-get-started-contributing-to-open-source-projects" rel="alternate" type="text/html" title="How to get started contributing to open source projects" /><published>2017-08-28T00:00:00+00:00</published><updated>2017-08-28T00:00:00+00:00</updated><id>https://krausefx.github.io/krausefx.com//blog/how-to-get-started-contributing-to-open-source-projects</id><content type="html" xml:base="https://krausefx.github.io/krausefx.com//blog/how-to-get-started-contributing-to-open-source-projects">&lt;p&gt;Submitting code to an open source project can be a very scary feeling. When I submitted my first pull request I was scared. Scared that I’m doing something wrong. Scared that my patch wasn’t useful. Scared that other developers would make fun of me. &lt;/p&gt;
+
+&lt;p&gt;I slowly worked my way up, from submitting smaller contributions to random open source projects, to then publishing my first open source library &lt;a href=&quot;https://github.com/krausefx/tsmessages&quot;&gt;TSMessages&lt;/a&gt;, to finally building and releasing &lt;a href=&quot;https://fastlane.tools&quot;&gt;fastlane&lt;/a&gt;, an open source project that is now being used by tens of thousands of companies.&lt;/p&gt;
+
+&lt;p&gt;I want to encourage more people to get started contributing to open source projects, this blog post will show you how important open source software is in today’s world, and how it can help you grow as an engineer.&lt;/p&gt;
+
+&lt;h1 id=&quot;why-developers-and-companies-use-open-source-software&quot;&gt;Why developers and companies use open source software&lt;/h1&gt;
+
+&lt;h2 id=&quot;-project-stays-alive-much-longer&quot;&gt;👴 Project stays alive much longer&lt;/h2&gt;
+
+&lt;p&gt;How often did you use a proprietary software solution, only to discover that the service is discontinued a few months after you’re fully ramped up?&lt;/p&gt;
+
+&lt;p&gt;Open source projects can be more robust in regards of maintenance, because there isn’t a single company that can decide to stop working on the project. Instead you have a group of maintainers that invest time and resources into a given software. Even if nobody has access to the code repository, developers can fork the project, and push it forward. This is something that I’ve done myself multiple times for dependencies we have in fastlane.&lt;/p&gt;
+
+&lt;h2 id=&quot;-independence-you-can-fix-problems-yourself&quot;&gt;🔧 Independence: you can fix problems yourself&lt;/h2&gt;
+
+&lt;p&gt;What happens if you use a commercial software and you run into a blocking issue with it? You’ll have to reach out to the support team, and hope they take your problem seriously and provide a fix for you. If the product was shut down, you’ll probably have no chance of getting any help at all.&lt;/p&gt;
+
+&lt;p&gt;With open source projects you are in full control over the software you run: You can dive into the source code, make changes and run those changes in your code base directly, without the original author’s approval. Even if a project is not being maintained any more, you can still not only use the open source software, but also fix issues and extend its feature sets.&lt;/p&gt;
+
+&lt;h2 id=&quot;-trust&quot;&gt;🤝 Trust&lt;/h2&gt;
+
+&lt;p&gt;What closed source binaries do you include in your mobile app? Each of them adds a risk for your app and your users, as it adds multiple attack surfaces. You cannot tell what the binary does, it could be malicious, it could collect data you don’t want to track, it could call home without you knowing, it might have bugs causing other areas of the app to be slowed down or even crash, a &lt;a href=&quot;https://en.wikipedia.org/wiki/Man-in-the-middle_attack&quot;&gt;man-in-the-middle attack&lt;/a&gt; might modify the binary while you download it, or the download server gets hacked as it happened with &lt;a href=&quot;https://en.wikipedia.org/wiki/XcodeGhost&quot;&gt;XcodeGhost&lt;/a&gt; just last year. A closed source binary as part of your build phase might even go as far as uploading your app’s source code, secret keys and other data from your local machine. Some of these problems also apply to open source projects, however you do have more control over them. You can fork the project, audit the code, and then periodically merge it with the upstream repository after auditing the changes.&lt;/p&gt;
+
+&lt;p&gt;There are multiple approaches to fix man-in-the-middle attacks and future XcodeGhosts, like checking the code signing of the app and comparing the hashes, however you’ll never be able to tell what the binary does under the hood.&lt;/p&gt;
+
+&lt;h2 id=&quot;-knowledge-sharing&quot;&gt;📖 Knowledge sharing&lt;/h2&gt;
+
+&lt;p&gt;Open source code enables every person on the planet with access to a computer and internet to read your code and learn from it. This is extremely powerful and isn’t done in a lot of areas. For example when studying physics, you’ll soon notice how many papers and critical information are hidden behind paywalls or kept secret by the author.&lt;/p&gt;
+
+&lt;p&gt;Artsy is a great example: &lt;a href=&quot;https://github.com/artsy&quot;&gt;their apps are open source&lt;/a&gt;, so when someone asks one of the engineers how they do X, they can just link to the source code.&lt;/p&gt;
+
+&lt;h2 id=&quot;-open-source-build-tools&quot;&gt;🛠 Open source build tools&lt;/h2&gt;
+
+&lt;p&gt;Since I’m working on developer tooling most of the time, I’m thinking a lot about how essential they are for a team to be productive. If they don’t work, you can’t ship to your users. Being in control of your most important infrastructure pieces is crucial to making sure you’re not dependent on third parties when :poo: hits the fan.&lt;/p&gt;
+
+&lt;p&gt;No matter if you work on mobile apps or something else, very often there are services that promise to take all the heavy lifting for you by providing a proprietary, hosted software solution. This is great if you are starting out, however, by relying on this kind of solution you accumulate technical debt that you will have to fix in the future.&lt;/p&gt;
+
+&lt;p&gt;With your business critical infrastructure pieces (which includes build and deploy tools) you’ll want to have the knowledge of how they work, and ideally the opportunity to fix problems and customize the setup to fit your needs. If something doesn’t work you can dive into the code base, analyze the error, and fix the problem. This might not be as relevant for indie developers, but for bigger companies with dozens or hundred of engineers depending on the build and release process, it is important to be able to fix systems as soon as they break.&lt;/p&gt;
+
+&lt;h1 id=&quot;why-contribute-to-open-source-projects&quot;&gt;Why contribute to open source projects?&lt;/h1&gt;
+
+&lt;p&gt;Using open source software is awesome, but why would you care about working on one? &lt;/p&gt;
+
+&lt;h2 id=&quot;-scale-of-impact&quot;&gt;📈 Scale of impact&lt;/h2&gt;
+
+&lt;p&gt;It’s hard to imagine the impact you can have on developers all around the world when working on open source projects. &lt;/p&gt;
+
+&lt;p&gt;You can have this kind of impact, either by working on an existing open source project, or also by open sourcing some code you wrote. Who knows, it might be the next big thing :)&lt;/p&gt;
+
+&lt;h3 id=&quot;-how-did-i-get-started-with-open-source&quot;&gt;🤔 How did I get started with open source?&lt;/h3&gt;
+
+&lt;p&gt;The first time I got into open source, is actually when I open sourced my first project called “TSMessages”. When I was showing my little app to &lt;a href=&quot;https://twitter.com/myell0w&quot;&gt;Matthias&lt;/a&gt; at CocoaHeads in Vienna, he asked me if I can open source the custom notification bars I built. I didn’t know a lot about open source back then, but Matthias was kind enough to help me with the process.&lt;/p&gt;
+
+&lt;p&gt;At the time of release &lt;a href=&quot;https://cocoapods.org/pods/TSMessages&quot;&gt;TSMessages&lt;/a&gt; had 2 classes and less than 400 lines of code. Within the next months more and more people started using it, resulting in a total of over a million downloads. Currently the project is actively being used by &lt;a href=&quot;https://cocoapods.org/pods/TSMessages&quot;&gt;13,000 apps&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Without me having to put in extra work, I didn’t only use TSMessages for all my personal apps, but helped 13,000 other companies to show better notifications in their apps.&lt;/p&gt;
+
+&lt;h3 id=&quot;impact-with-fastlane&quot;&gt;Impact with fastlane&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://fastlane.tools&quot;&gt;fastlane&lt;/a&gt; started as my &lt;a href=&quot;https://github.com/krausefx/evaluation_report&quot;&gt;Bachelor project&lt;/a&gt;, where I put the code on GitHub after completing the first tool deliver. One tool led to another, resulting in the fastlane umbrella tool, containing 17 standalone tools, 170 built-in actions, and 180 third party plugins. Today fastlane has saved over 9,000,000 developer hours and is used by tens of thousands of companies around the world.&lt;/p&gt;
+
+&lt;p&gt;I never expected the project to grow this big. It started by only solving the problems I had as an iOS developer. No matter how small you think a script or tool is, it will probably help other developers out there who face the same challenges. Only 9 months after releasing the first version, fastlane joined Twitter, and I helped build a team around fastlane. Today, fastlane is a 6 person team based in San Francisco and Boston and is moving faster than ever.&lt;/p&gt;
+
+&lt;h2 id=&quot;-career--jobs&quot;&gt;👩‍💻 Career &amp;amp; Jobs&lt;/h2&gt;
+
+&lt;p&gt;2 years ago, I didn’t know a single person working at one of the big tech companies. All the tech giants were a closed bubble for me coming from Europe, I couldn’t ask someone how it is to work there, I didn’t have anyone to refer me, I didn’t know how the companies are structured. After moving to San Francisco, working for Twitter, and now Google I have a much better sense of how things work. &lt;/p&gt;
+
+&lt;p&gt;If you’re in the same position I was 2 years ago, and you’re thinking about working at Google, Facebook, or similar, one of the best ways to get in touch with someone there is to contribute to one of the company’s open source projects.&lt;/p&gt;
+
+&lt;p&gt;Larger companies that own open source projects, not always have the necessary resources to maintain all aspects of them. The organizations are happy about external maintainers, and depending on the team behind it, you might receive an email sooner or later :) &lt;/p&gt;
+
+&lt;h2 id=&quot;-resume&quot;&gt;📃 Resume&lt;/h2&gt;
+
+&lt;p&gt;Listing open source contributions in your CV is powerful. It shows engagement in the developer community, and that you’re potentially familiar with established tooling and frameworks in your field. Depending on your contribution, it demonstrates that you can navigate around in an existing code base, identify an issue, debug and fix problems, or extend the project’s feature set. The majority of engineers use open source software for their projects, however only a small percentage also contribute. It’s definitely a great plus point for every resume.&lt;/p&gt;
+
+&lt;h2 id=&quot;-to-sum-up&quot;&gt;👍 To sum up&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Learn new technology&lt;/li&gt;
+  &lt;li&gt;Improve a project you use&lt;/li&gt;
+  &lt;li&gt;Pimp your resume&lt;/li&gt;
+  &lt;li&gt;Collaborate with people you would otherwise never work with&lt;/li&gt;
+  &lt;li&gt;Your code could end up being used by millions of users (literally)&lt;/li&gt;
+  &lt;li&gt;Internet points: the maintainers might tweet about your contributions&lt;/li&gt;
+  &lt;li&gt;Many projects attribute their contributors on their website, or changelog - this has the nice side effect of boosting your personal search engine visibility also, especially if your name is common&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;how-to-get-started-with-open-source&quot;&gt;How to get started with open source&lt;/h1&gt;
+
+&lt;p&gt;Hopefully I got you interested in contributing to open source software, so the next question is, how do you best get started?&lt;/p&gt;
+
+&lt;h2 id=&quot;-subscribe-to-a-repo-youre-interested-in&quot;&gt;📢 Subscribe to a repo you’re interested in&lt;/h2&gt;
+
+&lt;p&gt;By subscribing to notifications of an open source repo, you’ll get a good sense of what the community is like, what problems the contributors are facing, and where you can jump in to help. After a few weeks of being active, you’ll get a good sense of what the community is working on and how you can help.&lt;/p&gt;
+
+&lt;h2 id=&quot;-dont-be-discouraged-try-contributing-people-will-help-you&quot;&gt;🤠 Don’t be discouraged, try contributing, people will help you&lt;/h2&gt;
+
+&lt;p&gt;It’s scary submitting your first pull request to a new project. Some projects might not be looking for new contributors, so it’s a good idea to subscribe to a project before starting to contribute, so you get a feel on what the community is like. &lt;/p&gt;
+
+&lt;p&gt;With 
+&lt;a href=&quot;https://fastlane.tools&quot;&gt;fastlane&lt;/a&gt;, we welcome all new contributors, mention every single one 
+&lt;a href=&quot;https://github.com/fastlane/fastlane/releases/tag/2.54.1&quot;&gt;in the release notes&lt;/a&gt; by name, and after successfully getting multiple PRs merged and helping other people, we promote them to 
+&lt;a href=&quot;https://github.com/fastlane/fastlane/blob/master/CORE_CONTRIBUTOR.md&quot;&gt;core contributors&lt;/a&gt;. &lt;/p&gt;
+
+&lt;h2 id=&quot;-contribute-to-projects-that-are-widely-used-but-have-a-low-bus-factor&quot;&gt;🚌 Contribute to projects that are widely used, but have a low bus factor&lt;/h2&gt;
+
+&lt;p&gt;There is a lot of open source software that’s being used by hundreds of thousands of projects, but only have a single maintainer. Often those projects are so foundational of everything in an ecosystem, that people forget it exists. This is your chance to go through the 
+&lt;a href=&quot;https://libraries.io/bus-factor&quot;&gt;list of projects&lt;/a&gt; with the worst bus factor and jump in and help.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The “bus factor” is the minimum number of team members that have to suddenly disappear from a project before the project stalls due to lack of knowledgeable.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Bus_factor&quot;&gt;Source: Wikipedia&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;One example of where things went really wrong was the left-pad project, a tiny JavaScript library that was maintained by a single person, that 
+&lt;a href=&quot;https://www.theregister.co.uk/2016/03/23/npm_left_pad_chaos/&quot;&gt;broke thousands of projects&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;-how-to-join-the-development-team-of-open-source-projects&quot;&gt;👪 How to join the development team of open source projects&lt;/h2&gt;
+
+&lt;p&gt;Becoming a core contributor of a project very much depends on the size of the project:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Hyper-scale open source projects (e.g. Swift, React Native): It’s going to be pretty difficult to stand out, as there are hundreds of active maintainers, and it’s hard to tell how actively the owners of the repo monitor the activity of contributors. Very often, those kinds of projects have mailing lists you can join.&lt;/li&gt;
+  &lt;li&gt;Projects that are popular and the go-to solution in its field (e.g. devise, CocoaPods, fastlane): Those projects are a great opportunity to have extremely high impact on other developers, while still having a rather small core development team. &lt;/li&gt;
+  &lt;li&gt;Low bus factor projects (see bus factor list): It’s rather easy and informal to join the development team. It’s usually enough to ping the current maintainer and ask about the plans for the project, and how you can help.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For many developers, the most interesting category is the second one: You can have a lot of impact within a short amount of time, get visibility and you have the chance to join a welcoming community and it’s a great opportunity to learn from fellow developers.&lt;/p&gt;
+
+&lt;h2 id=&quot;-getting-started&quot;&gt;🚀 Getting started&lt;/h2&gt;
+
+&lt;p&gt;Sometimes it’s not so clear on how to get started, so here are some tips on what you can do in no specific order&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Helping out with an open source project is usually rather informal, often it’s enough to submit a smaller pull request&lt;/li&gt;
+  &lt;li&gt;Look at some older issues and pull requests, and see if you can help get them resolved&lt;/li&gt;
+  &lt;li&gt;See if there is a Slack group, Gitter or email group you can join to see what the core team talks about&lt;/li&gt;
+  &lt;li&gt;Read through the documentation and guides to see if there are parts that aren’t clear and need updating&lt;/li&gt;
+  &lt;li&gt;Most projects at this size will have a &lt;a href=&quot;https://github.com/fastlane/fastlane/blob/master/CONTRIBUTING.md&quot;&gt;CONTRIBUTING.md file&lt;/a&gt; that explains how to get started with contributing code, and helping users&lt;/li&gt;
+  &lt;li&gt;There might be additional documentation on how the project is structured and where to get started&lt;/li&gt;
+  &lt;li&gt;Many projects will have outdated documentation, it’s a great chance for you to get some “internet points” by improving those&lt;/li&gt;
+  &lt;li&gt;Adding more tests to existing projects gives you great visibility on how the project works, while at the same time making the maintainers very happy. Unit tests are often self-contained, making it easy for you to add them.&lt;/li&gt;
+  &lt;li&gt;Subscribe to the repo to see how the community members interact with each other, and get a sense of what problems the project is facing&lt;/li&gt;
+  &lt;li&gt;Some projects have a “&lt;a href=&quot;https://github.com/fastlane/fastlane/labels/complexity%3A%20you%20can%20do%20this&quot;&gt;you-can-do-this&lt;/a&gt;”, “help-wanted” or “beginner-friendly” GitHub labels, that are usually simpler fixes with some instructions provided by the maintainers.&lt;/li&gt;
+  &lt;li&gt;There might be monthly video calls to align the whole development team&lt;/li&gt;
+  &lt;li&gt;Onboard the project from a new user’s perspective, and see if there are any rough edges you could improve&lt;/li&gt;
+  &lt;li&gt;The core team might be active on social networks like Twitter, make use of them&lt;/li&gt;
+  &lt;li&gt;If you have an idea on how you can improve the project, submit an issue first to get feedback from the core team before spending time on building it. This is especially important if it’s a new feature that will need to be maintained in the future. Don’t forget to look if an issue for this specific idea was already created.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The most important piece is to get out there and submit pull requests, the rest will happen automatically.&lt;/p&gt;
+
+&lt;h1 id=&quot;-wrapping-up&quot;&gt;🎁 Wrapping up&lt;/h1&gt;
+
+&lt;p&gt;Developers and companies become more and more aware of how important it is for their dependencies to be in open source, not only to see what’s happening under the hood, but also to be able to fix problems themselves or even run their own fork if needed. This is especially relevant for build and deployment tools, but also third party SDKs you ship with your app. &lt;/p&gt;
+
+&lt;p&gt;It has never been easier to get started contributing to open source, all it takes is a computer with internet access. As an engineer, it’s a great move for your career to get involved in open source communities: You have great impact outside of your usual work scope and have the chance to work with people you’d never otherwise work with!&lt;/p&gt;
+
+&lt;p&gt;If you’re still unsure, and need help getting started with your first contribution, please send me a private message on 
+&lt;a href=&quot;https://twitter.com/KrauseFx&quot;&gt;Twitter (@KrauseFx)&lt;/a&gt;, I’m more than happy to help wherever I can 👍&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Shoutout to my friends who helped me with this blog post: &lt;a href=&quot;https://twitter.com/orta&quot;&gt;@orta&lt;/a&gt;, &lt;a href=&quot;https://twitter.com/hemal&quot;&gt;@hemal&lt;/a&gt;, &lt;a href=&quot;https://twitter.com/schukin&quot;&gt;@schukin&lt;/a&gt;, &lt;a href=&quot;https://twitter.com/_caro_n&quot;&gt;@_caro_n&lt;/a&gt;, &lt;a href=&quot;https://twitter.com/acrooow&quot;&gt;@acrooow&lt;/a&gt;, &lt;a href=&quot;https://twitter.com/sebmasterkde&quot;&gt;@sebmasterkde&lt;/a&gt; and &lt;a href=&quot;https://twitter.com/domysee&quot;&gt;@domysee&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">Submitting code to an open source project can be a very scary feeling. When I submitted my first pull request I was scared. Scared that I’m doing something wrong. Scared that my patch wasn’t useful. Scared that other developers would make fun of me. </summary></entry><entry><title type="html">Analyzing your public GitHub contributions using Google Big Query</title><link href="https://krausefx.github.io/krausefx.com//blog/analyzing-your-public-github-contributions-using-google-big-query" rel="alternate" type="text/html" title="Analyzing your public GitHub contributions using Google Big Query" /><published>2017-08-06T00:00:00+00:00</published><updated>2017-08-06T00:00:00+00:00</updated><id>https://krausefx.github.io/krausefx.com//blog/analyzing-your-public-github-contributions-using-google-big-query</id><content type="html" xml:base="https://krausefx.github.io/krausefx.com//blog/analyzing-your-public-github-contributions-using-google-big-query">&lt;p&gt;Do you like those GitHub graphs, but want to know even more about your open source behavior? GitHub has you covered with 
+&lt;a href=&quot;https://www.githubarchive.org/&quot;&gt;githubarchive.org&lt;/a&gt;. GitHubArchive offers dumps of all GitHub events of all users and open source projects. New ones are generated every single day, and are instantly accessible. They are very easy to use together with 
+&lt;a href=&quot;https://cloud.google.com/bigquery/&quot;&gt;Google Big Query&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you have a Google Cloud account &amp;amp; project, click 
+&lt;a href=&quot;https://bigquery.cloud.google.com/savedquery/900199909722:d0156caf0eb0459981d4d0cd31ba6326&quot;&gt;this link&lt;/a&gt; to give it a try. Use the 
+Run Query button and wait for about 30 seconds, and you’ll get a list of people that comment on any of the 
+&lt;a href=&quot;https://fastlane.tools&quot;&gt;fastlane&lt;/a&gt; repos most often in the year of 2017 (see screenshot below):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_592b463d44024329b9559389_1496008271573__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;To run this query for your own GitHub organization, just replace the “
+fastlane/%” with your own GitHub org. You can also easily extend the query to show more columns (see the 
+&lt;a href=&quot;https://developer.github.com/v3/activity/events/types/&quot;&gt;list of available events&lt;/a&gt;).&lt;/p&gt;
+
+&lt;h3 id=&quot;running-queries-on-your-own-profile&quot;&gt;Running queries on your own profile&lt;/h3&gt;
+
+&lt;p&gt;I was wondering of how my GitHub behavior changed over the last few years, now that fastlane is actively being used by tens of thousands of companies, it’s harder to 
+&lt;a href=&quot;https://krausefx.com/blog/scaling-open-source-communities&quot;&gt;keep the innovation you had in the beginning&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The last 3 years I published a total of&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;16,000 comments&lt;/li&gt;
+  &lt;li&gt;5,550 Pull Requests&lt;/li&gt;
+  &lt;li&gt;907 releases&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;across a high number of different open source projects, mostly 
+&lt;a href=&quot;https://github.com/fastlane/fastlane&quot;&gt;fastlane&lt;/a&gt;, 
+&lt;a href=&quot;https://github.com/KrauseFx/TSMessages&quot;&gt;TSMessages&lt;/a&gt;, 
+&lt;a href=&quot;http://danger.system&quot;&gt;danger&lt;/a&gt; and lots of other projects.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Below you can see the last 5 years of open source code contributions:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_598682c8bebafb164ee70efb_1501987676418__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Over the last 3 years, on average I did the following 
+&lt;strong&gt;every single week&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Post &lt;strong&gt;77 comments&lt;/strong&gt; on GitHub Issues&lt;/li&gt;
+  &lt;li&gt;Submit &lt;strong&gt;28 Pull Requests&lt;/strong&gt;(the first year of fastlane, I didn’t submit PRs on my own repos)&lt;/li&gt;
+  &lt;li&gt;Posted &lt;strong&gt;16 comments&lt;/strong&gt; on GitHub Pull Requests&lt;/li&gt;
+  &lt;li&gt;Published &lt;strong&gt;5 fastlane releases&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;wrapping-up&quot;&gt;Wrapping up&lt;/h3&gt;
+
+&lt;p&gt;You can extend those queries to show you more information that’s relevant to you. I initially wanted to use this to see which of our contributors are the most active, and make sure we promote them to be &lt;a href=&quot;https://github.com/fastlane/fastlane/blob/master/CORE_CONTRIBUTOR.md&quot;&gt;Core Contributors&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;There has been quite some discussion around the GitHub graph (e.g. &lt;a href=&quot;https://github.com/isaacs/github/issues/627&quot;&gt;isaacs/github#627&lt;/a&gt;), as many engineers took it far too seriously and tried to have a long streak without any interruptions. GitHub reacted to the feedback and removed the streak count from all profiles, and added an option to show private contributions on the graphs.&lt;/p&gt;
+
+&lt;p&gt;Special thanks to &lt;a href=&quot;https://twitter.com/sebmasterkde&quot;&gt;@sebmasterkde&lt;/a&gt; for coming up with the initial queries.&lt;/p&gt;
+
+&lt;p&gt;Note: The data shown above is from May, as that’s when I wrote this blog post, but was kind of distracted with more important things (life and such) and finally found the time to publish this post.&lt;/p&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cm&quot;&gt;/* GitHub query to get the number of comments, PR, releases, etc. for a given GH org */&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;WITH&lt;/span&gt; 
+  &lt;span class=&quot;n&quot;&gt;ProjectData&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;`githubarchive.day.2017*`&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;repo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;LIKE&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'fastlane/%'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Actors&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;DISTINCT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;actor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;login&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProjectData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; 
+    &lt;span class=&quot;n&quot;&gt;actors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;COUNT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProjectData&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'IssueCommentEvent'&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AND&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;login&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Comments&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;COUNT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProjectData&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'PullRequestEvent'&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AND&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;login&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PRs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;COUNT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProjectData&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'PullRequestReviewCommentEvent'&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AND&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;login&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ReviewComments&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;COUNT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProjectData&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ReleaseEvent'&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AND&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;login&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Releases&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;COUNT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProjectData&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'IssuesEvent'&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AND&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;login&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;login&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ClosedRenamedAndLabeledIssues&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Actors&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actors&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PRs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;OR&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Comments&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ORDER&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;BY&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PRs&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;DESC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Comments&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;DESC&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="open source" /><category term="github" /><summary type="html">Do you like those GitHub graphs, but want to know even more about your open source behavior? GitHub has you covered with githubarchive.org. GitHubArchive offers dumps of all GitHub events of all users and open source projects. New ones are generated every single day, and are instantly accessible. They are very easy to use together with Google Big Query.</summary></entry><entry><title type="html">Introducing fastlane precheck</title><link href="https://krausefx.github.io/krausefx.com//blog/introducing-fastlane-precheck" rel="alternate" type="text/html" title="Introducing fastlane precheck" /><published>2017-06-22T00:00:00+00:00</published><updated>2017-06-22T00:00:00+00:00</updated><id>https://krausefx.github.io/krausefx.com//blog/introducing-fastlane-precheck</id><content type="html" xml:base="https://krausefx.github.io/krausefx.com//blog/introducing-fastlane-precheck">&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_594bf0c5725e251920f62ee3_1498149086679__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;You probably know how time-consuming it is to ensure your app follows the latest app review guidelines. App store rules can be complicated and hard to remember because they are constantly changing, but all developers need to follow them to avoid rejection. &lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
+
+&lt;p&gt;That’s why today, we’re excited to introduce 
+fastlane precheck to save you the time and hassle of auditing your own app! 
+fastlane precheck reviews your app’s metadata (in seconds) to catch the most common metadata rejection errors, such as mentioning other platforms or having broken URLs.&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
+
+&lt;p&gt;On a personal note, I’m super thrilled to launch fastlane precheck because it’s the first new iOS tool we built 
+&lt;a href=&quot;https://krausefx.com/blog/fastlane-is-joining-google&quot;&gt;since joining Google&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
+
+&lt;p&gt;Read the full announcement on the 
+&lt;a href=&quot;https://fabric.io/blog/introducing-fastlane-precheck&quot;&gt;Fabric blog&lt;/a&gt;. &lt;/p&gt;
+
+&lt;h3 style=&quot;text-align: center; font-size: 40px;&quot;&gt;
+  &lt;a href=&quot;https://fastlane.tools/precheck&quot; target=&quot;_blank&quot; style=&quot;text-decoration: underline;&quot;&gt;
+    Open on GitHub
+  &lt;/a&gt;
+&lt;/h3&gt;</content><author><name></name></author><category term="fastlane" /><summary type="html"></summary></entry><entry><title type="html">What is the value of iOS code signing?</title><link href="https://krausefx.github.io/krausefx.com//blog/the-developer-part-of-ios-code-signing-doesnt-add-any-security-to-anything" rel="alternate" type="text/html" title="What is the value of iOS code signing?" /><published>2017-04-14T00:00:00+00:00</published><updated>2017-04-14T00:00:00+00:00</updated><id>https://krausefx.github.io/krausefx.com//blog/the-developer-part-of-ios-code-signing-doesnt-add-any-security-to-anything</id><content type="html" xml:base="https://krausefx.github.io/krausefx.com//blog/the-developer-part-of-ios-code-signing-doesnt-add-any-security-to-anything">&lt;p&gt;All those hours you spend on getting code signing to work properly on your machine, on your CI and on your co-workers Mac… your app and the App Store would be just a safe and secure without it.&lt;/p&gt;
+
+&lt;h2 id=&quot;is-code-signing-really-a-problem-for-developers&quot;&gt;Is code signing really a problem for developers?&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Yes!&lt;/strong&gt;
+ On the fastlane repo alone, 
+&lt;a href=&quot;https://github.com/fastlane/fastlane/search?utf8=%E2%9C%93&amp;amp;q=%22provisioning+profile%22+OR+%22code+signing%22+OR+%22codesign%22+OR+%22certificate%22+OR+%22codesigning%22&amp;amp;type=Issues&quot;&gt;over 1,700 GitHub Issues are related to code signing&lt;/a&gt;. That is over 30% of all incoming requests. On Stackoverflow you can find over 
+&lt;a href=&quot;https://stackoverflow.com/search?q=ios+code+signing&quot;&gt;3,000 questions&lt;/a&gt; around iOS code signing, even though it’s not related to actual code.&lt;/p&gt;
+
+&lt;h2 id=&quot;why-do-we-have-to-codesign-ios-apps&quot;&gt;Why do we have to codesign iOS apps?&lt;/h2&gt;
+
+&lt;p&gt;Code signing is one of the most crucial security components of the iOS ecosystem:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Code signing allows Apple to control what software can be installed on iOS devices. &lt;/li&gt;
+  &lt;li&gt;Code signing ensures your app doesn’t get modified by a third party on the way from your Mac to the end-users iPhone.&lt;/li&gt;
+  &lt;li&gt;You sign your app with your signature, it ensures that the app is from you.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_58f03fa7d482e960c0f03cd9_1492139949018__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;whats-the-problem-with-the-current-process&quot;&gt;What’s the problem with the current process?&lt;/h2&gt;
+
+&lt;p&gt;Once someone has access to your Apple credentials, they can easily revoke all your certificate, create new ones, and update the provisioning profile to use theirs. &lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;When you submit your iOS app for review, the app gets resigned by Apple after being approved, so your code signature isn’t actually used when the end-user downloads your app.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;When you create a new Certificate Signing Request you can select &lt;code class=&quot;highlighter-rouge&quot;&gt;Saved to disk&lt;/code&gt;. This means, if someone has access to your Apple Developer Account, they can create as many new, valid certificates as they want, without having access to your email account.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_58f03f4186e6c0436eebf811_1492139855970_Screenshot+2017-04-10+06.30.15.png.15.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;For many iOS developers, the account credentials never leave their computer (e.g. if they use Xcode and 
+&lt;a href=&quot;https://fastlane.tools&quot;&gt;fastlane&lt;/a&gt;), but there is also a handful of third party web services that ask for your Apple ID credentials, which are then stored on their servers. If the service isn’t open source, there is no way for you to know how the credentials are stored and secured.&lt;/p&gt;
+
+&lt;h2 id=&quot;how-to-fix-ios-code-signing-see-what-i-did-there&quot;&gt;How to fix iOS code signing? (see what I did there?)&lt;/h2&gt;
+
+&lt;h3 id=&quot;dont-require-developers-to-codesign-or-make-it-completely-automatic&quot;&gt;Don’t require developers to codesign, or make it completely automatic&lt;/h3&gt;
+
+&lt;p&gt;Don’t require code signing locally on the developer’s machine at all. Tools like the iTunes Transporter already verify the checksums and validity of the uploaded binary. Just by doing this one thing, you never have to deal with code signing again. &lt;/p&gt;
+
+&lt;p&gt;And assuming your Developer account doesn’t have 2-factor auth enabled, there would be no difference in the security across the whole process.&lt;/p&gt;
+
+&lt;p&gt;The alternative would be to do all the code signing completely automatic in the background via Xcode. That’s already the case (previously known as Fix Issue button), and it works great for some use-cases, however once your team reaches a certain scale, you’ll quickly run into its limits (see 
+&lt;a href=&quot;https://codesigning.guide&quot;&gt;codesigning.guide&lt;/a&gt;).&lt;/p&gt;
+
+&lt;h3 id=&quot;enforce-2-factor&quot;&gt;Enforce 2-factor&lt;/h3&gt;
+
+&lt;p&gt;Enforce 2-step verification for all Apple Developer accounts, offer a way for teams to easily add multiple phone numbers or email addresses. Access to production apps is important enough to enforce 2-step verification for all accounts.&lt;/p&gt;
+
+&lt;h3 id=&quot;require-2-factor-auth-before-resigning-the-app&quot;&gt;Require 2 factor auth before resigning the app&lt;/h3&gt;
+
+&lt;p&gt;Once your app is approved, the owner of the app should be asked to confirm that this version should be shipped. This can be done either via email or SMS verification, but not via the iTunes Connect Web UI directly, as otherwise people with access to the portal could confirm your app release. This could even be its own iTunes Connect role.&lt;/p&gt;
+
+&lt;h3 id=&quot;entitlements&quot;&gt;Entitlements&lt;/h3&gt;
+
+&lt;p&gt;Right now Entitlements are set up on your local machine. This could either be moved onto the server side on iTunes Connect, or work automatically under the hood on your local machine&lt;/p&gt;
+
+&lt;h3 id=&quot;local-code-signing-is-still-required-for-development-builds&quot;&gt;Local code signing is still required for Development builds&lt;/h3&gt;
+
+&lt;p&gt;You’ll always need to sign your app to install it on your actual device, however this became a lot easier over the last two years, as more and more people can use their personal Apple ID to install their app on their real device. This is actually quite critical, as local code signing was abused by multiple app providers to enable people to install apps that are not approved by Apple (e.g. 
+&lt;a href=&quot;https://justgetflux.com/sideload/&quot;&gt;Flux for iOS&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;ad-hoc-builds-still-require-code-signing&quot;&gt;Ad Hoc builds still require code signing&lt;/h3&gt;
+
+&lt;p&gt;The above mentioned techniques won’t work for Ad Hoc builds, code signing should still be required as before.&lt;/p&gt;</content><author><name></name></author><category term="codesigning" /><category term="ios" /><summary type="html">All those hours you spend on getting code signing to work properly on your machine, on your CI and on your co-workers Mac… your app and the App Store would be just a safe and secure without it.</summary></entry><entry><title type="html">Joining Google</title><link href="https://krausefx.github.io/krausefx.com//blog/joining-google" rel="alternate" type="text/html" title="Joining Google" /><published>2017-03-06T00:00:00+00:00</published><updated>2017-03-06T00:00:00+00:00</updated><id>https://krausefx.github.io/krausefx.com//blog/joining-google</id><content type="html" xml:base="https://krausefx.github.io/krausefx.com//blog/joining-google">&lt;p&gt;In 2010 we visited the Google campus on our family trip to California. Ever since then I knew I wanted to work here at one point in my life. Today, 7 years later, I had my first day at Google in Mountain View, joining via the acquisition of Fabric. I’m so happy that I reached this goal, and I can’t wait for what I’ll learn over the next few months and years.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_58c9a1d7e3df284bc6b7139b_1489609200904__img.jpg_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name></name></author><summary type="html">In 2010 we visited the Google campus on our family trip to California. Ever since then I knew I wanted to work here at one point in my life. Today, 7 years later, I had my first day at Google in Mountain View, joining via the acquisition of Fabric. I’m so happy that I reached this goal, and I can’t wait for what I’ll learn over the next few months and years.</summary></entry><entry><title type="html">Scaling open source communities</title><link href="https://krausefx.github.io/krausefx.com//blog/scaling-open-source-communities" rel="alternate" type="text/html" title="Scaling open source communities" /><published>2017-01-31T00:00:00+00:00</published><updated>2017-01-31T00:00:00+00:00</updated><id>https://krausefx.github.io/krausefx.com//blog/scaling-open-source-communities</id><content type="html" xml:base="https://krausefx.github.io/krausefx.com//blog/scaling-open-source-communities">&lt;p&gt;Not too long ago I started an open source project called &lt;a href=&quot;https://fastlane.tools&quot;&gt;fastlane&lt;/a&gt;. Just a month after publishing, it had 1000+ stars on GitHub and was beginning to get used by lots of serious tech companies around the world. Soon I was the sole maintainer of a project getting 10+ PRs/day, and spending 8+hrs/day reviewing PRs and replying to questions on GitHub. This is the story of some of the challenges I faced when scaling the project to where it is today: a OSS project stewarded by Twitter and now Google, with over 12k commits, 13k stars, 500+ contributors, and one of the top 25 most active open source projects on GitHub (spoiler alert: I didn’t do it alone).&lt;/p&gt;
+
+&lt;h2 id=&quot;different-stages-of-open-source-projects&quot;&gt;Different stages of open source projects&lt;/h2&gt;
+
+&lt;h3 id=&quot;stage-1-putting-source-code-on-github&quot;&gt;Stage 1: Putting source code on GitHub&lt;/h3&gt;
+
+&lt;p&gt;About &lt;a href=&quot;https://github.com/search?utf8=%E2%9C%93&amp;amp;q=stars%3A0&amp;amp;type=Repositories&amp;amp;ref=advsearch&amp;amp;l=&amp;amp;l=&quot;&gt;40%&lt;/a&gt; of all repositories on GitHub have 0 stars and don’t gain a lot of traction. Most of those repositories don’t have a single GitHub issue or Pull Request. For example, a very early version of fastlane snapshot was called &lt;a href=&quot;https://github.com/KrauseFx/rScreenshooter&quot;&gt;rScreenshooter&lt;/a&gt; and has almost no engagement on GitHub.&lt;/p&gt;
+
+&lt;h3 id=&quot;stage-2-developers-start-using-your-software&quot;&gt;Stage 2: Developers start using your software&lt;/h3&gt;
+
+&lt;p&gt;It’s tough to know how many people use your code until you get your first Issue or PR. Receiving your first PR is an amazing feeling: Complete strangers care enough about your project that they gave it a try, and even dived into the code to work on an improvement, and send it back to you. However, simple PRs like a doc changes aren’t signals that a developer is using your code. Only when a pull request changes the software’s behavior you know it’s being used, and it’s a great feeling. For fastlane this was the case &lt;a href=&quot;https://github.com/fastlane-old/deliver/pull/17&quot;&gt;a PR from foozmeat&lt;/a&gt; that improves the design of the app’s summary. Not only was that a great change, but also was it from someone at &lt;a href=&quot;https://panic.com/&quot;&gt;Panic&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;stage-3-project-is-popular-and-the-go-to-solution-in-its-field&quot;&gt;Stage 3: Project is popular and the go-to solution in its field&lt;/h3&gt;
+
+&lt;p&gt;Even more exciting times start when your project becomes the de-facto standard for the problem your software solves. In my experience you first realise it when someone on Twitter asks on how to solve a problem, and multiple people reply with a link to your GitHub project.&lt;/p&gt;
+
+&lt;p&gt;Examples:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Accessing SQLite in your iOS app: &lt;a href=&quot;https://github.com/ccgus/fmdb&quot;&gt;fmdb&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Authentication for your Rails app: &lt;a href=&quot;https://github.com/plataformatec/devise&quot;&gt;devise&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;stage-4-hyper-scale-open-source-projects&quot;&gt;Stage 4: Hyper-scale open source projects&lt;/h3&gt;
+
+&lt;p&gt;If you finally are able to grow your user base wide enough, you might hit a new set of problems. Stage 4 is where the fun begins: you will get hundreds of notifications every day, there will be blog posts that &lt;a href=&quot;http://drekka.ghost.io/cocoapods-vs-carthage/&quot;&gt;attack your project&lt;/a&gt; and there will be commercial versions of your project, maybe even (partly) using your source code. Some of those projects slowly evolved to being in this category (e.g. &lt;a href=&quot;https://github.com/rails/rails&quot;&gt;rails&lt;/a&gt;), however more and more projects have a kick-start by being launched as a solid, finished open source project by one of the big companies like Facebook or GitHub.&lt;/p&gt;
+
+&lt;p&gt;Examples:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/facebook/react-native&quot;&gt;react-native&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/atom/atom&quot;&gt;atom&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;scaling-open-source-projects-is-hard&quot;&gt;Scaling open source projects is hard&lt;/h2&gt;
+
+&lt;div style=&quot;width: 270px; float: right;&quot;&gt;
+  &lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_58900fabe3df281428d8cca5_1485836247300__img.png_&quot; /&gt;
+  &lt;small&gt;My time spent on GitHub compared to my text editor, with the growing popularity of fastlane, GitHub goes up more and more&lt;/small&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;keeping-the-momentum&quot;&gt;Keeping the momentum&lt;/h3&gt;
+
+&lt;p&gt;The bigger your project becomes, the harder it is to keep the innovation you had in the beginning of your project. Suddenly you have to consider hundreds of different use-cases, thousands of production setups and can’t just remove an option, or change a default value.&lt;/p&gt;
+
+&lt;h3 id=&quot;handling-support-for-open-source-projects&quot;&gt;Handling support for open source projects&lt;/h3&gt;
+
+&lt;p&gt;Once you pass a few thousand active users, you’ll notice that helping your users takes more time than actually working on your project. People submit all kinds of issues, most of them aren’t actually issues, but feature requests or questions.&lt;/p&gt;
+
+&lt;h4 id=&quot;receiving-feature-requests&quot;&gt;Receiving feature requests&lt;/h4&gt;
+
+&lt;p&gt;How you handle feature requests is up to you, there are various ways projects handle them:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Let people submit features as issues, and label them as feature request. This way other users can easily find them using the search, and upvote them&lt;/li&gt;
+  &lt;li&gt;Have a separate page where users can submit and upvote feature requests&lt;/li&gt;
+  &lt;li&gt;Don’t accept new features, and feature freeze your project&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;There are very interesting conversations when you close feature requests:  &lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_58900efa3a04116aa6e7b999_1485836029092__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;being-in-the-public-spotlight&quot;&gt;Being in the public spotlight&lt;/h4&gt;
+
+&lt;p&gt;As a maintainer you are under big pressure when dealing with those kinds of situations. Depending on the conversation, people can tweet screenshots,&lt;a href=&quot;https://news.ycombinator.com/item?id=11245652&quot;&gt;you might land on HackerNews&lt;/a&gt; or cause a shitstorm, causing hundreds of comments by random people on the internet. This distraction leads to many maintainers leaving feature requests open and unanswered, and not dealing with them altogether.&lt;/p&gt;
+
+&lt;p&gt;Due to the pressure of having 100% of your activities (both code and conversations) in public, lots of open source maintainers burn out. You can find hundreds of blog articles about software developers sharing their story (most recently “&lt;a href=&quot;https://medium.com/@thejameskyle/dear-javascript-7e14ffcae36c#.imt9j3rxi&quot;&gt;Dear JavaScript&lt;/a&gt;”).&lt;/p&gt;
+
+&lt;h4 id=&quot;reviewing-external-prs&quot;&gt;Reviewing external PRs&lt;/h4&gt;
+
+&lt;p&gt;As a maintainer you often have the responsibility to decide what you merge into your project’s code base, and what to reject. Very often these are very difficult decisions, which might hurt other people. When merging code changes that introduce new features or options, the maintainers have to consider the long-term effect of this change:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The feature has to be supported in future releases.&lt;/li&gt;
+  &lt;li&gt;The feature has to be tested with all future changes.&lt;/li&gt;
+  &lt;li&gt;When the feature breaks, very often the project maintainer has to fix it, unless the original author is still available.&lt;/li&gt;
+  &lt;li&gt;Many users aren’t aware of this, and sometimes people get offended on GitHub when you say “No” to a new flag or option.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In general, reviewing and testing a pull request, takes almost as much time as writing the code for it. As a maintainer you have goals for your project, and work towards them. By receiving external pull requests without any prior discussion on a GitHub issue or mailing list, you have to pause what you currently worked on, to review and test this change without the same context or motivation that the PR author has.&lt;/p&gt;
+
+&lt;p&gt;It’s very hard to balance reaching your current goals, and investing time reviewing pull requests that don’t work towards them.&lt;/p&gt;
+
+&lt;h3 id=&quot;maintainers-stop-being-users-of-the-project-as-it-grows&quot;&gt;Maintainers stop being users of the project as it grows&lt;/h3&gt;
+
+&lt;p&gt;This is an interesting phenomenon with many big open source project, including &lt;a href=&quot;https://fastlane.tools&quot;&gt;fastlane&lt;/a&gt; and &lt;a href=&quot;https://cocoapods.org&quot;&gt;CocoaPods&lt;/a&gt;: The project was started because the author needed the software for themselves. Suddenly they work on the open source project full-time, stopping the activity they’ve been doing before. With that they stop being a user of their own project. They are not in their own product’s target group any more.&lt;/p&gt;
+
+&lt;p&gt;The challenge is to still somehow use the product to feel the user’s pain points, and realize what to focus their time on. For example, &lt;a href=&quot;https://github.com/fastlane/fastlane/blob/master/fastlane/Fastfile&quot;&gt;fastlane is deployed using fastlane&lt;/a&gt;, therefore everyone working on fastlane also uses the product. If that’s not possible for your project, force yourself to onboard your own project from time to time, and go through the whole process.&lt;/p&gt;
+
+&lt;h3 id=&quot;information-imbalance-with-your-users&quot;&gt;Information imbalance with your users&lt;/h3&gt;
+
+&lt;p&gt;Due to the nature of scaling software, there is a big information imbalance between the project maintainers and the users. For you as a maintainer, an issue is “just another issue” (one of hundreds), but for the user, this one issue is everything. This issue is 100% of the interaction with your product, and it’s something they will remember for a long time.&lt;/p&gt;
+
+&lt;p&gt;This first hit me when I attended my first WWDC in 2016, and iOS developers came up to me to talk about the GitHub issue they submitted a while back, assume I’d remember the whole conversation. This is not only the case for online interactions, but also when talking with users of your software.&lt;/p&gt;
+
+&lt;p&gt;For the maintainer it’s an issue that has to be prioritized and it might not be the most important thing. For the user, it’s everything and might keep them from using your product, and it’s the thing they are going to remember for a really long time.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-healthy-way-to-scale-your-open-source-project&quot;&gt;The healthy way to scale your open source project&lt;/h2&gt;
+
+&lt;h3 id=&quot;improve-your-error-messages&quot;&gt;Improve your error messages&lt;/h3&gt;
+
+&lt;p&gt;How you handle failures has a big impact on how easy it is for the user to resolve the issue. So many developer tools get that wrong (&lt;a href=&quot;https://krausefx.com/blog/ios-tools&quot;&gt;Thoughts on iOS build tools&lt;/a&gt;) and make it incredibly hard for people to use their software.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_589014e86b8f5ba2ed9c2751_1485837553599__img.png_&quot; alt=&quot;Before changing fastlane to highlight the actual error message and still showing the stack trace by default&quot; /&gt;&lt;small&gt;Before changing fastlane to highlight the actual error message and still showing the stack trace by default&lt;/small&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_589014db6a496349b23a05f1_1485837535364__img.png_&quot; alt=&quot;After the change: fastlane now color-highlights the actual error message, and hides the stack trace by default, unless it's a real crash&quot; /&gt;&lt;small&gt;After the change: fastlane now color-highlights the actual error message, and hides the stack trace by default, unless it’s a real crash&lt;/small&gt;&lt;/p&gt;
+
+&lt;p&gt;The left screenshot shows an early version of &lt;em&gt;fastlane&lt;/em&gt;, compared to how &lt;em&gt;fastlane&lt;/em&gt; shows error messages today. Not only how you present the error message, but its content is really important: Make sure the message explains the error well enough and ideally even include instructions on how to fix it.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_58901058ff7c50a0160df707_1485836406181_Screenshot+2017-01-10+10.46.36.png.36.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In fastlane we even link to StackOverflow replies and make sure to include all necessary information to debug an issue. In this example we show the certificate ID and team name.&lt;/p&gt;
+
+&lt;h3 id=&quot;make-it-easy-to-find-existing-issues&quot;&gt;Make it easy to find existing issues&lt;/h3&gt;
+
+&lt;p&gt;When you receive a cryptic error message, what’s the first thing you do? Usually you search on the GitHub repo page, or google for the message. You as a project maintainer should make it easy as possible for the user to do so. That’s why &lt;a href=&quot;https://github.com/orta/gh_inspector&quot;&gt;@orta&lt;/a&gt; started &lt;a href=&quot;https://github.com/orta/gh_inspector&quot;&gt;gh_inspector&lt;/a&gt;, a Ruby gem to show related GitHub issues right in the user’s terminal. Whenever &lt;em&gt;fastlane&lt;/em&gt; runs into an unexpected situation, it will not only show similar GitHub issues, but also print out the GitHub search URL. The long-term plan is to also support StackOverflow questions (see &lt;a href=&quot;https://github.com/orta/gh_inspector/issues/13&quot;&gt;#13&lt;/a&gt;)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_589010b0d1758e5ffee5719f_1485836468314__img.png_&quot; alt=&quot;Whenever fastlane runs into an unexpected error it automatically shows similar issues on GitHub&quot; /&gt; &lt;small&gt;Whenever fastlane runs into an unexpected error it automatically shows similar issues on GitHub&lt;/small&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;use-of-bots&quot;&gt;Use of bots&lt;/h3&gt;
+
+&lt;p&gt;I’m not a big fan of bots and automated messages, however as soon as you reach a certain scale you need to have some automated systems to reduce the support load.&lt;/p&gt;
+
+&lt;h4 id=&quot;ensuring-all-required-information-is-available&quot;&gt;Ensuring all required information is available&lt;/h4&gt;
+
+&lt;p&gt;Providing all information when submitting a bug report is hard, even as a software engineer. GitHub recently introduced &lt;a href=&quot;https://github.com/fastlane/fastlane/blob/master/.github/ISSUE_TEMPLATE.md&quot;&gt;ISSUE_TEMPLATE.MD&lt;/a&gt;, that auto-fills the “New Issue” form with instructions on how to file an issue. However most people ignore the instructions.&lt;/p&gt;
+
+&lt;p&gt;Using the fastlane-bot we ensure all required information is available, and if not, tell the user how to provide them.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_589010f1579fb3e4efb8de86_1485836537367__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;With that, fastlane also supports the &lt;code class=&quot;highlighter-rouge&quot;&gt;fastlane env&lt;/code&gt; command that prints out all relevant information:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_589011091b631bae058125db_1485836558502__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;fastlane env&lt;/code&gt; command collects all relevant system information, like your Ruby environment, OpenSSL version and used fastlane plugins, ready to be posted on GitHub.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_58901125bf629a5f22eba2da_1485836585201__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Helping users is so much easier if you have all the information right there, including all configuration files, other dependencies and version numbers.&lt;/p&gt;
+
+&lt;h4 id=&quot;answers-based-on-keywords&quot;&gt;Answers based on keywords&lt;/h4&gt;
+
+&lt;p&gt;If you receive similar issues very often, you should step back and work on fixing the underlying issue or making usage more clear. If 10 users submit a specific kind of issue, hundreds of other users felt the same way but didn’t take the time to submit an issue.&lt;/p&gt;
+
+&lt;p&gt;In the case of fastlane, many issues are related to code signing (yeah), however there is no ultimate solution to fix all issues as of now (&lt;a href=&quot;https://codesigning.guide/&quot;&gt;codesigning.guide&lt;/a&gt; is the easiest one so far). We wrote an extensive guide on how to setup code signing and how to troubleshoot problems. As with most things, users don’t like reading manuals, unless you link them to the right spot, which is exactly what the &lt;code class=&quot;highlighter-rouge&quot;&gt;fastlane-bot&lt;/code&gt; does in that case.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_5890115eb8a79b243d8396cb_1485836642761__img.png_&quot; alt=&quot;Many times just linking people to the right docs already helps&quot; /&gt;&lt;small&gt;Many times just linking people to the right docs already helps&lt;/small&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;stale-issues&quot;&gt;Stale issues&lt;/h4&gt;
+
+&lt;p&gt;The key to handle support for large-scale open source projects is to keep issues moving. Try to avoid having issues stall. If you’re an iOS developer you know how frustrating it can be to submit radars. You might hear back 2 years later, and are told to try again with the latest version of iOS. Chances are high you have no way to reproduce the issue again for multiple reasons:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The user tried your software, submitted the issue, and went with a different solution in the meantime&lt;/li&gt;
+  &lt;li&gt;The user already found a workaround, and doesn’t care about spending more time on this issue&lt;/li&gt;
+  &lt;li&gt;Many engineers switch companies and projects frequently&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Having a bot can ensure that issues are still relevant and reproducible. The &lt;code class=&quot;highlighter-rouge&quot;&gt;fastlane-bot&lt;/code&gt; automatically asks if an issue is still relevant with the most recent fastlane release after just 2 months.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_5890119203596e99bbde85b4_1485836693702__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If no participant of the issue replies to the bot within a month, the issue gets auto-closed, with a note that a new issue can be submitted to continue the discussion.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_589012303a04116aa6e7e2fb_1485836852929__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;About a month after closing the issue, the bot locks the conversation to repository admins only.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_5890123d1e5b6ccc19bdbe5e_1485836864236__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;locking-resolved-and-inactive-issues&quot;&gt;Locking resolved and inactive issues&lt;/h4&gt;
+
+&lt;p&gt;Locking conversations of resolved, inactive issues is a great way to avoid re-surfacing GitHub issues from old releases. In the case of &lt;em&gt;fastlane&lt;/em&gt; the following happened a lot in the past:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Users would comment on issues that are not related to their problem, however sound similar&lt;/li&gt;
+  &lt;li&gt;Users would comment on issues with a lot of subscribers from a long time ago, triggering unwanted email notifications for people who already found a solution&lt;/li&gt;
+  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;fastlane-bot&lt;/code&gt; doesn’t ensure if all required information is provided for single comments, but only for new issues&lt;/li&gt;
+  &lt;li&gt;Users would add “me too” commented without providing any details of the current problem they’re having&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;By telling users to submit a new issue, you properly go through the complete lifecycle of an issue:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;User submits issue&lt;/li&gt;
+  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;fastlane-bot&lt;/code&gt; ensures all required information was provided&lt;/li&gt;
+  &lt;li&gt;Actual discussion around the issue&lt;/li&gt;
+  &lt;li&gt;Issue gets resolved or auto-closed due to inactivity&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_5890128ee58c62b50ea5bd89_1485836947308__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;responding-to-pull-requests&quot;&gt;Responding to pull requests&lt;/h4&gt;
+
+&lt;p&gt;The sections above mostly covered issues, but a very essential part is also responding to pull request. You have certain rules for your projects, like automated tests, code style and architecture. Many of those things are already checked by regular CI systems, and the build for the PR fails if the requirements aren’t met.&lt;/p&gt;
+
+&lt;p&gt;However tests don’t ensure the way how changes are introduced (= the delta). That’s why &lt;a href=&quot;https://twitter.com/orta&quot;&gt;@orta&lt;/a&gt; and I set out to build &lt;a href=&quot;http://danger.systems&quot;&gt;danger&lt;/a&gt;, a tool that allows you to define rules for code changes. Some examples:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Post test failures right on GitHub so that contributors don’t have to scroll through the CI output&lt;/li&gt;
+  &lt;li&gt;Show a warning when certain files get modified&lt;/li&gt;
+  &lt;li&gt;Require new tests when more than 20 lines were modified&lt;/li&gt;
+  &lt;li&gt;And many &lt;a href=&quot;http://danger.systems/&quot;&gt;more&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;pr-and-run&quot;&gt;PR and Run&lt;/h4&gt;
+
+&lt;p&gt;This is something you can see in many open source projects, someone takes the time to submit a pull request, the build is failing but the author doesn’t update the PR. The reason for that is that there is no GitHub notification when their build fails, so you as a project maintainer now have to be the “bad person” to tell the developer to fix the tests. That’s time you spend on something, that should be completely automated. By using danger, you can have the CI post the test results right on GitHub triggering a GitHub email notification.&lt;/p&gt;
+
+&lt;h3 id=&quot;steering-the-direction&quot;&gt;Steering the direction&lt;/h3&gt;
+
+&lt;p&gt;It’s 🔑 to work into the same direction and have a shared vision. For open source project, most communication happens asynchronously instead of having meetings. Because of that, it’s a little harder to stay focused on going into the right direction.&lt;/p&gt;
+
+&lt;p&gt;Many bigger open source projects introduced a VISION.md (e.g.&lt;a href=&quot;https://github.com/fastlane/fastlane/blob/master/VISION.md&quot;&gt;fastlane&lt;/a&gt;,&lt;a href=&quot;https://github.com/danger/danger/blob/master/VISION.md&quot;&gt;danger&lt;/a&gt;) that describes the bigger-picture goal of a project and the overall philosophy.&lt;/p&gt;
+
+&lt;p&gt;This enables contributors of the project to say “No” to feature requests or PRs by referencing the written agreement in the repository. The beauty of this approach is also that everyone has the opportunity to submit PRs for the VISION.md document to propose changes in the policies.&lt;/p&gt;
+
+&lt;h3 id=&quot;scaling-contribution&quot;&gt;Scaling contribution&lt;/h3&gt;
+
+&lt;p&gt;As your project grows you need more people joining you on maintaining the project and pushing it forward. You want to increase the &lt;a href=&quot;https://en.wikipedia.org/wiki/Bus_factor&quot;&gt;bus factor&lt;/a&gt; as your project grows, meaning more and more people know how the project works and can commit code. There are some great approaches out there, like the &lt;a href=&quot;https://github.com/Moya/contributors&quot;&gt;moya contributing guidelines&lt;/a&gt; by &lt;a href=&quot;https://ashfurrow.com&quot;&gt;Ash Furrow&lt;/a&gt;. Ideally the project operates without any help from you.&lt;/p&gt;
+
+&lt;h4 id=&quot;code-of-conduct&quot;&gt;Code of Conduct&lt;/h4&gt;
+
+&lt;p&gt;With a growing community, you also need to ensure developers are in a safe environment. One action you should take very early in your project is to add a Code of Conduct (&lt;a href=&quot;https://ashfurrow.com/blog/building-popular-projects/#code-of-conduct&quot;&gt;more information by Ash&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h4 id=&quot;onboarding-instructions&quot;&gt;Onboarding instructions&lt;/h4&gt;
+
+&lt;p&gt;Make it very easy for engineers interested in submitting code changes to set up their development environment. If you’re not a mono-repo yet (:trollface:), you might need a repo to quickly set up all the other repos, e.g. CocoaPod’s &lt;a href=&quot;https://github.com/CocoaPods/Rainforest&quot;&gt;Rainforest&lt;/a&gt;, fastlane’s &lt;a href=&quot;https://github.com/fastlane-old/countdown/blob/c0209981cdc66d9a2c1d2be9708d52346b60dced/Rakefile&quot;&gt;countdown&lt;/a&gt;(now deprecated)&lt;/p&gt;
+
+&lt;h4 id=&quot;keeping-your-code-base-simple&quot;&gt;Keeping your code base simple&lt;/h4&gt;
+
+&lt;p&gt;This is something not many open source projects consider: the more complex the software architecture is, the more difficult it is to get started coding and less people are able to contribute. Instead of using the latest Ruby magic to save 4 lines of code, use the easiest to understand technique to solve a problem, making it easier for people to spot issues and contribute fixes and improvements.&lt;/p&gt;
+
+&lt;h4 id=&quot;be-welcoming-and-friendly&quot;&gt;Be welcoming and friendly&lt;/h4&gt;
+
+&lt;p&gt;This has been top priority for me since starting fastlane. Always be as friendly as you can. Thank people for submitting issues and PRs. Ask people for help or clarification if needed.&lt;/p&gt;
+
+&lt;h3 id=&quot;enabling-your-users-to-extend-your-project&quot;&gt;Enabling your users to extend your project&lt;/h3&gt;
+
+&lt;p&gt;When scaling your project you have to say “No” to many new features and ideas. Instead you need to focus on what your software is best at. However most software would be very limited if there was no way to extend it. Depending on the size of your community, there are two good way to achieve that.&lt;/p&gt;
+
+&lt;h4 id=&quot;offer-dynamic-configuration-files-ala-dsl&quot;&gt;Offer dynamic configuration files (ala DSL)&lt;/h4&gt;
+
+&lt;p&gt;Many Ruby-based open source projects, including fastlane, CocoaPods and Bundler, offer a DSL that allows developers to implement a very dynamic configuration. Instead of having static values like it is the case in JSON or yml files, you can execute code in a Fastfile, Podfile and Gemfile. This is extremely useful to fetch or generate values on demand, like accessing an internal server for the latest app description.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_589012cf3e00beee625cda6b_1485837010186__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;allow-local-extensions&quot;&gt;Allow local extensions&lt;/h4&gt;
+
+&lt;p&gt;This is how we started out with fastlane: when a user needed an integration for a third party or internal service that isn’t available yet, they can easily build and use a local action without having to touch the actual &lt;em&gt;fastlane&lt;/em&gt; code base. Most of the times, the developers would store their local actions in their git repository.&lt;/p&gt;
+
+&lt;h4 id=&quot;allow-the-community-to-extend-and-build-on-your-project-using-plugins&quot;&gt;Allow the community to extend and build on your project using plugins&lt;/h4&gt;
+
+&lt;p&gt;Allowing local changes works great for a while, until users want to share their integrations with the rest of the community. Once that’s the case you need to provide an ecosystem (kind of like a marketplace) for developers to share their integrations.&lt;/p&gt;
+
+&lt;p&gt;While it’s not possible for all kinds of projects, building a plugin architecture enables your project to advance at a much faster pace. Your dependency graph will stay slimmer, you might receive less PRs adding new features and your core code base can stay smaller.&lt;/p&gt;
+
+&lt;p&gt;Of course you can build your own dependency resolving, however think twice before doing so. There might be a great dependency manager available you can use to implement your plugins.&lt;/p&gt;
+
+&lt;p&gt;At &lt;em&gt;fastlane&lt;/em&gt; we use RubyGems and bundler to make it easy for people to distribute and use plugins. As a result there are already &lt;a href=&quot;https://rubygems.org/search?utf8=%E2%9C%93&amp;amp;query=fastlane-plugin-&quot;&gt;120 third party plugins&lt;/a&gt; available within just a few months.&lt;/p&gt;
+
+&lt;h2 id=&quot;wrapping-up&quot;&gt;Wrapping up&lt;/h2&gt;
+
+&lt;p&gt;Scaling open source projects is hard. Really hard. There are lots of challenges you’ll solve while scaling up. Ideally you’re not the person having to solve all problems that are caused by a growing project, but have core contributors helping you. Good open source projects stay alive for a really long time and you can have an enormous impact on developers and companies around the world with it. If you face challenges, don’t give up, ask the community for help. I personally have never worked on a project with such a great impact, and I feel extremely lucky to work on the right thing at the right time.
+ &lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;I described the above with the assumption that you would use GitHub for your open source projects. There are many alternatives out there, however to simplify the above text I decided to use GitHub with the terms “Issues” and “Pull Requests”.&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name></name></author><summary type="html">Not too long ago I started an open source project called fastlane. Just a month after publishing, it had 1000+ stars on GitHub and was beginning to get used by lots of serious tech companies around the world. Soon I was the sole maintainer of a project getting 10+ PRs/day, and spending 8+hrs/day reviewing PRs and replying to questions on GitHub. This is the story of some of the challenges I faced when scaling the project to where it is today: a OSS project stewarded by Twitter and now Google, with over 12k commits, 13k stars, 500+ contributors, and one of the top 25 most active open source projects on GitHub (spoiler alert: I didn’t do it alone).</summary></entry><entry><title type="html">fastlane is joining Google</title><link href="https://krausefx.github.io/krausefx.com//blog/fastlane-is-joining-google" rel="alternate" type="text/html" title="fastlane is joining Google" /><published>2017-01-23T00:00:00+00:00</published><updated>2017-01-23T00:00:00+00:00</updated><id>https://krausefx.github.io/krausefx.com//blog/fastlane-is-joining-google</id><content type="html" xml:base="https://krausefx.github.io/krausefx.com//blog/fastlane-is-joining-google">&lt;p&gt;&lt;img src=&quot;/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_588652f0e6f2e14123570b50_1485198071513__img.png_&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It’s only been a bit over year that &lt;a href=&quot;https://krausefx.com/blog/fastlane-is-now-part-of-fabric&quot;&gt;fastlane joined Fabric&lt;/a&gt; at Twitter, which enabled me and the team to build even more awesome things around fastlane, just some examples:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A &lt;a href=&quot;https://fabric.io/features/distribution&quot;&gt;web-app&lt;/a&gt; to build your fastlane configuration&lt;/li&gt;
+  &lt;li&gt;A &lt;a href=&quot;https://download.fastlane.tools/&quot;&gt;pre-packaged fastlane&lt;/a&gt;, to have all dependencies bundled&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://fabric.io/blog/introducing-fastlane-plugins&quot;&gt;fastlane plugins&lt;/a&gt;, a new way to create powerful actions and extend fastlane&lt;/li&gt;
+  &lt;li&gt;Full 2-factor support for Apple IDs&lt;/li&gt;
+  &lt;li&gt;Upgraded fastlane to be a mono-repo&lt;/li&gt;
+  &lt;li&gt;Launched the new &lt;a href=&quot;https://docs.fastlane.tools&quot;&gt;docs.fastlane.tools&lt;/a&gt; page&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Today it’s time for the next big step for fastlane: fastlane - along with the &lt;a href=&quot;https://fabric.io/blog/fabric-joins-google&quot;&gt;Fabric&lt;/a&gt; platform - is joining Google, working together with the Firebase team. The two teams are committed to building the best tools to help developers build better apps. fastlane will stay an open source project as part of that mission.&lt;/p&gt;
+
+&lt;p&gt;I’m super excited about this opportunity, and can’t wait for what we can all build together.&lt;/p&gt;</content><author><name></name></author><category term="fastlane" /><category term="google" /><summary type="html"></summary></entry></feed>
